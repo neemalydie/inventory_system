@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Device List - Airtel Inventory</title>
+    <style>
+        * { margin: 0;
+         padding: 0;
+          box-sizing: border-box; 
+          }
+        body { 
+			font-family: 'Segoe UI', sans-serif; 
+			background: #f4f6f9; }
+        .sidebar {
+			 position: fixed; 
+			 left: 0;
+			  top: 0; 
+			 width: 260px;
+			  height: 100%; 
+			  background: #2c3e50; 
+			  color: white; 
+			  padding-top: 20px; }
+        .sidebar h2 { text-align: center; margin-bottom: 30px; font-size: 20px; }
+        .sidebar a { display: block; padding: 12px 20px; color: white; text-decoration: none; }
+        .sidebar a:hover { background: #34495e; }
+        .main-content { margin-left: 260px; padding: 20px; }
+        .header { background: white; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .logout-btn { background: #e74c3c; color: white; padding: 8px 15px; border-radius: 5px; text-decoration: none; }
+        table { width: 100%; background: white; border-radius: 8px; border-collapse: collapse; overflow: hidden; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #3498db; color: white; }
+        .success { background: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 15px; }
+        .btn-edit { background: #3498db; color: white; padding: 5px 10px; border-radius: 3px; text-decoration: none; font-size: 12px; }
+        .btn-delete { background: #e74c3c; color: white; padding: 5px 10px; border-radius: 3px; text-decoration: none; font-size: 12px; }
+        .btn-edit:hover { background: #2980b9; }
+        .btn-delete:hover { background: #c0392b; }
+        .actions { display: flex; gap: 5px; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>📦AIRTEL IMS</h2>
+        <a href="/dashboard">📊 Dashboard</a>
+        <a href="/devices/register">➕ Register Device</a>
+        <a href="/devices/list" style="background:#3498db">📱 Device List</a>
+        <a href="/employees/register">👤 Register Employee</a>
+        <a href="/employees/list">👥 Employee List</a>
+        <a href="/assignments/new">📤 Assign Device</a>
+        <a href="/assignments/return">📤 Return Device</a>
+        <a href="/assignments/active">📋 Active Assignments</a>
+        <a href="/search">🔍 Search & Filter</a>
+        <a href="/reports">📊 Reports</a>
+    </div>
+    
+    <div class="main-content">
+        <div class="header">
+            <h1>Device List</h1>
+            <a href="/logout" class="logout-btn">Logout</a>
+        </div>
+        
+        <div th:if="${param.success}" class="success">
+            ✅ Device registered successfully!
+        </div>
+        <div th:if="${param.updated}" class="success">
+            ✅ Device updated successfully!
+        </div>
+        <div th:if="${param.deleted}" class="success">
+            ✅ Device deleted successfully!
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Serial Number</th>
+                    <th>Type</th>
+                    <th>Brand</th>
+                    <th>Model</th>
+                    <th>RAM</th>
+                    <th>Storage</th>
+                    <th>Condition</th>
+                    <th>Status</th>
+                    <th sec:authorize="hasRole('ADMIN')">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="device : ${devices}">
+                    <td th:text="${device.id}"></td>
+                    <td th:text="${device.serialNumber}"></td>
+                    <td th:text="${device.deviceType}"></td>
+                    <td th:text="${device.brand}"></td>
+                    <td th:text="${device.model}"></td>
+                    <td th:text="${device.ram}"></td>
+                    <td th:text="${device.storage}"></td>
+                    <td th:text="${device.condition}"></td>
+                    <td th:text="${device.available} ? 'Available' : 'Assigned'"></td>
+                    <td sec:authorize="hasRole('ADMIN')" class="actions">
+                        <a th:href="@{/devices/edit/{id}(id=${device.id})}" class="btn-edit">✏️Edit</a>
+                        <a th:href="@{/devices/delete/{id}(id=${device.id})}" 
+                           class="btn-delete" 
+                           onclick="return confirm('Are you sure you want to delete device: ' + '${device.serialNumber}' + '?')">🗑️Delete</a>
+                    </td>
+                </tr>
+                <tr th:if="${devices.isEmpty()}">
+                    <td colspan="10" style="text-align:center">No devices found. Click "Register Device" to add one.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

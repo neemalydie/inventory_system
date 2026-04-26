@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Active Assignments - Airtel Inventory</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f6f9; }
+        .sidebar { position: fixed; left: 0; top: 0; width: 260px; height: 100%; background: #2c3e50; color: white; padding-top: 20px; }
+        .sidebar h2 { text-align: center; margin-bottom: 30px; }
+        .sidebar a { display: block; padding: 12px 20px; color: white; text-decoration: none; }
+        .sidebar a:hover { background: #34495e; }
+        .main-content { margin-left: 260px; padding: 20px; }
+        .header { background: white; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; }
+        .logout-btn { background: #e74c3c; color: white; padding: 8px 15px; border-radius: 5px; text-decoration: none; }
+        table { width: 100%; background: white; border-radius: 8px; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #3498db; color: white; }
+        .success { background: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 15px; }
+        .btn-return { background: #e67e22; color: white; padding: 5px 10px; border-radius: 3px; text-decoration: none; font-size: 12px; }
+        .btn-return:hover { background: #d35400; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>📦AIRTEL IMS</h2>
+        <a href="/dashboard">📊 Dashboard</a>
+        <a href="/devices/register">➕ Register Device</a>
+        <a href="/devices/list">📱 Device List</a>
+        <a href="/employees/register">👤 Register Employee</a>
+        <a href="/employees/list">👥 Employee List</a>
+        <a href="/assignments/new">📤 Assign Device</a>
+        <a href="/assignments/return">📥 Return Device</a>
+        <a href="/assignments/active" style="background:#3498db">📋 Active Assignments</a>
+        <a href="/search">🔍 Search & Filter</a>
+        <a href="/reports">📊 Reports</a>
+    </div>
+    
+    <div class="main-content">
+        <div class="header">
+            <h1>Active Assignments</h1>
+            <a href="/logout" class="logout-btn">Logout</a>
+        </div>
+        
+        <div th:if="${param.success}" class="success">
+            ✅ Operation completed successfully!
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Device Serial</th>
+                    <th>Device Type</th>
+                    <th>Employee</th>
+                    <th>Department</th>
+                    <th>Issue Date</th>
+                    <th>Purpose</th>
+                    <th sec:authorize="hasRole('ADMIN')">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="a : ${assignments}">
+                    <td th:text="${a.device.serialNumber}"></td>
+                    <td th:text="${a.device.deviceType}"></td>
+                    <td th:text="${a.employee.fullName}"></td>
+                    <td th:text="${a.employee.department}"></td>
+                    <td th:text="${a.issueDate}"></td>
+                    <td th:text="${a.purpose}"></td>
+                    <td sec:authorize="hasRole('ADMIN')">
+                        <a th:href="@{/assignments/return}" class="btn-return">Return</a>
+                    </td>
+                </tr>
+                <tr th:if="${assignments.isEmpty()}">
+                    <td colspan="7" style="text-align:center">No active assignments</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

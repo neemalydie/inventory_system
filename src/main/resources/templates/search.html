@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Search & Filter</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f6f9; }
+        .sidebar { position: fixed; left: 0; top: 0; width: 260px; height: 100%; background: #2c3e50; color: white; padding-top: 20px; }
+        .sidebar h2 { text-align: center; margin-bottom: 30px; }
+        .sidebar a { display: block; padding: 12px 20px; color: white; text-decoration: none; }
+        .sidebar a:hover { background: #34495e; }
+        .main-content { margin-left: 260px; padding: 20px; }
+        .header { background: white; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; }
+        .search-box { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        .filter-group { display: inline-block; margin-right: 15px; }
+        .filter-group label { display: block; margin-bottom: 5px; }
+        .filter-group select, .filter-group input { padding: 8px; border: 1px solid #ddd; border-radius: 5px; }
+        button { background: #3498db; color: white; padding: 8px 20px; border: none; border-radius: 5px; cursor: pointer; }
+        table { width: 100%; background: white; border-radius: 8px; overflow: hidden; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #2c3e50; color: white; }
+        .logout-btn { background: #e74c3c; color: white; padding: 8px 15px; border-radius: 5px; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>📦AIRTEL IMS</h2>
+        <a href="/dashboard">📊 Dashboard</a>
+        <a href="/devices/register">➕ Register Device</a>
+        <a href="/employees/register">👤 Register Employee</a>
+        <a href="/assignments/new">📥 Assign Device</a>
+        <a href="/assignments/return">📥 Return Device</a>
+        <a href="/search" style="background:#3498db">🔍 Search & Filter</a>
+        <a href="/reports">📊 Reports</a>
+    </div>
+    
+    <div class="main-content">
+        <div class="header">
+            <h1>Search & Filter Devices</h1>
+            <a href="/logout" class="logout-btn">Logout</a>
+        </div>
+        
+        <div class="search-box">
+            <div class="filter-group">
+                <label>Device Type</label>
+                <select id="deviceType">
+                    <option value="">All</option>
+                    <option value="LAPTOP">Laptop</option>
+                    <option value="DESKTOP">Desktop</option>
+                    <option value="MOBILE">Mobile</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Brand</label>
+                <input type="text" id="brand" placeholder="Enter brand">
+            </div>
+            <div class="filter-group">
+                <label>Condition</label>
+                <select id="condition">
+                    <option value="">All</option>
+                    <option value="NEW">New</option>
+                    <option value="GOOD">Good</option>
+                    <option value="DAMAGED">Damaged</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Availability</label>
+                <select id="available">
+                    <option value="">All</option>
+                    <option value="true">Available</option>
+                    <option value="false">Assigned</option>
+                </select>
+            </div>
+            <button onclick="search()">Search</button>
+        </div>
+        
+        <table id="results">
+            <thead>
+                <tr><th>Serial</th><th>Type</th><th>Brand</th><th>Model</th><th>Condition</th><th>Status</th></tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    
+    <script>
+        function search() {
+            let deviceType = document.getElementById('deviceType').value;
+            let brand = document.getElementById('brand').value;
+            let condition = document.getElementById('condition').value;
+            let available = document.getElementById('available').value;
+            
+            let url = '/api/devices/search?';
+            if(deviceType) url += 'deviceType=' + deviceType + '&';
+            if(brand) url += 'brand=' + brand + '&';
+            if(condition) url += 'condition=' + condition + '&';
+            if(available) url += 'available=' + available;
+            
+            fetch(url)
+                .then(res => res.json())
+                .then(data => {
+                    let tbody = document.querySelector('#results tbody');
+                    tbody.innerHTML = '';
+                    data.forEach(d => {
+                        tbody.innerHTML += `<tr>
+                            <td>${d.serialNumber}</td>
+                            <td>${d.deviceType}</td>
+                            <td>${d.brand || '-'}</td>
+                            <td>${d.model || '-'}</td>
+                            <td>${d.condition}</td>
+                            <td>${d.available ? 'Available' : 'Assigned'}</td>
+                        </tr>`;
+                    });
+                });
+        }
+        search();
+    </script>
+</body>
+</html>

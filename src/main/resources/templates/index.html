@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Airtel IMS - Inventory Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #2c3e50;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .landing-container {
+            max-width: 1200px;
+            width: 90%;
+            margin: 20px auto;
+        }
+        
+        /* Header Section */
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .logo {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+        
+        .header h1 {
+            font-size: 48px;
+            color: white;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .header p {
+            font-size: 18px;
+            color: rgba(255,255,255,0.9);
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: rgba(255,255,255,0.8);
+            margin-top: 10px;
+        }
+        
+        /* Main Cards */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        .card-icon {
+            font-size: 50px;
+            margin-bottom: 20px;
+        }
+        
+        .card h3 {
+            font-size: 24px;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .card p {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .card-btn {
+            display: inline-block;
+            padding: 10px 25px;
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: background 0.3s;
+        }
+        
+        .card-btn:hover {
+            background: #2980b9;
+        }
+        
+        /* Feature Section */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .feature {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            color: white;
+        }
+        
+        .feature span {
+            font-size: 30px;
+            display: block;
+            margin-bottom: 10px;
+        }
+        
+        .feature p {
+            font-size: 14px;
+        }
+        
+        /* Developers Section */
+        .developers {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .developers h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        
+        .developer-list {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .developer {
+            text-align: center;
+        }
+        
+        .developer-avatar {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 40px;
+            color: white;
+        }
+        
+        .developer h4 {
+            font-size: 18px;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .developer p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .developer .reg {
+            color: #3498db;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: rgba(255,255,255,0.7);
+            padding: 20px;
+            font-size: 12px;
+        }
+        
+        /* Buttons */
+        .login-btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #e74c3c;
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: background 0.3s;
+        }
+        
+        .login-btn:hover {
+            background: #c0392b;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 32px;
+            }
+            .cards-container {
+                grid-template-columns: 1fr;
+            }
+            .developer-list {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="landing-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">📦</div>
+            <h1>AIRTEL Inventory Management System</h1>
+            <p>End User Equipment Tracking & Management</p>
+            <div class="subtitle">Offline • Secure • Reliable</div>
+            <a href="/login" class="login-btn">🔐 Launch System →</a>
+        </div>
+        
+        <!-- Main Features Cards -->
+        <div class="cards-container">
+            <div class="card">
+                <div class="card-icon">📱</div>
+                <h3>Device Tracking</h3>
+                <p>Register and track laptops, desktops, and mobile phones with serial numbers and specifications.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">👥</div>
+                <h3>Employee Management</h3>
+                <p>Manage employee records, assignments, and device ownership history.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">📋</div>
+                <h3>Assignment Control</h3>
+                <p>Assign and return devices with condition tracking and audit history.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">📊</div>
+                <h3>Reports & Analytics</h3>
+                <p>Generate detailed reports by department, device type, and status.</p>
+            </div>
+        </div>
+        
+        <!-- Quick Features -->
+        <div class="features">
+            <div class="feature">
+                <span>🔒</span>
+                <p>Secure Login</p>
+            </div>
+            <div class="feature">
+                <span>📴</span>
+                <p>Offline Mode</p>
+            </div>
+            <div class="feature">
+                <span>📝</span>
+                <p>Audit Trail</p>
+            </div>
+            <div class="feature">
+                <span>🔍</span>
+                <p>Search & Filter</p>
+            </div>
+        </div>
+        
+        <!-- Developers Section -->
+        <div class="developers">
+            <h2>👨‍💻 Developed By</h2>
+            <div class="developer-list">
+                <div class="developer">
+                    <div class="developer-avatar">👨</div>
+                    <h4>MUNYANEZA Nelson</h4>
+                    <div class="reg">📩 mn@gmail.com</div>
+                </div>
+                <div class="developer">
+                    <div class="developer-avatar">👩</div>
+                    <h4>NEEMA Lydie</h4>
+                    <div class="reg">📩 neema@gmaail.com</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <p>© 2026 AIRTEL IMS</p>
+            <p style="margin-top: 5px;">RP TUMBA COLLEGE| All Rights Reserved</p>
+        </div>
+    </div>
+</body>
+</html>
